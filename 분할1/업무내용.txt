@@ -1,0 +1,171 @@
+https://beck.uwstar.com/ 대조 
+
+ID: kim 비번: kim2004
+
+
+샤오홍수 계정 이름:
+韩好物
+
+합계/잔액 오류:
+PPB HONG KONG LIMITED — 2026-02-26 
+OJC HK CO., LIMITED — 2026-02-25
+H.K ELECTRONICS COMPANY — 2026-01-07
+STS HK Group Limited — 2025-12-09
+Cos HK International Limited — 2025-12-01
+OVS TEST Company — 2025-08-18
+HAENIM INTERNATIONAL LIMITED — 2025-07-18
+KJPRETECH ASIA HOLDINGS CO., LIMITED — 2025-07-16
+(REF: 25 OVS 0078 BN) 조병택 사장님 — 2025-06-23
+INTERNATIONAL DREAM CONTENTS LIMITED — 2025-06-20
+HJ TEXTILE COMPANY LIMITED — 2025-06-11
+PHILKOR HUMANS CO., LIMITED — 2025-05-14
+WiFiver Limited — 2025-05-09
+(REF: 25 SMT 0059 BN) 天津亚富路企业管理有限公司 — 2025-05-08
+Southernland Consulting and Trade Limited — 2024-12-27
+L＆K GLOBAL CO., LIMITED — 2024-11-19
+YBT LIMITED — 2024-11-18
+MAS INDUSTRY CO. LIMITED — 2024-11-13
+Shine International Trading (Hong Kong) Limited — 2024-11-11
+(REF: 24 SMT 0117 FA) 박종민 대표님 — 2024-11-04
+HOL TRADE LIMITED — 2024-09-19
+MOBILE IMAGE TECH COMPANY LIMITED — 2024-07-26
+UWTRANS (HK) LIMITED — 2024-07-26
+(REF: 24 SMT 0077 FA) 홍재원 대표님 — 2024-06-28
+HK Corporation ＆ Consulting Limited — 2024-06-18
+CHARM LINKAGE LIMITED — 2020-03-06 (잔액 오류)
+
+
+Adjustment
+
+(REF: 23 UWS 0727LQ) 蔻丝恩仁成（湖州）化妆品有限公司 — 2023-10-26
+[Adjustment −250,000.00]
+(REF: 22 UWS 0594 LQ) 삼덕회계법인 — 2022-07-20
+[Adjustment −₩4,968,700]
+Celltrion Group Hongkong Limited — 2020-03-12
+[Adjustment $31,500.00]
+(REF: 21 UWS 0282 LY) 加来San — 2021-03-31
+[Adjustment 25,454.00]
+Celltrion Group Hongkong Limited — 2021-03-30
+[Adjustment $19,388.00]
+W H K — 2021-06-15
+[Adjustment $1.00]
+ALLFAVOR TECHNOLOGY (HONG KONG) LIMITED — 2020-05-08
+[Adjustment 3,444.00]
+IM S＆T(HK) CO., LIMITED — 2020-03-20
+[Adjustment 1,898.00]
+
+
+잔액 오류:
+CHARM LINKAGE LIMITED — 2020-03-06
+
+
+노란색:
+UNI-WORLD TRANS (HK) CO., LIMITED — 2023-08-21
+[Adjustment $1.00]
+
+
+
+파일 불일치: 
+Invoice K1-21723
+[회사 이름(MEMBERSHEEP LIMITED->계좌명 확인 불가), 금액 같음-uni-world]
+Invoice K1-23507
+[회사 이름(YUJIN INTERNATIONAL (CHINA) CO., LIMITED->주식회사 스타켐(나정주)), 금액 같음]
+Invoice K1-23787
+[회사 이름(YUJIN INTERNATIONAL (CHINA) CO., LIMITED->주식회사 스타켐(송현숙)), 금액 같음]
+Invoice K1-23814
+[회사 이름(MEMBERSHEEP LIMITED->DEEPSALES CO LTD), 금액 같음-uni-world]
+Invoice K1-24903
+[회사 이름&금액 같음-smartone]
+Invoice K1-25042
+[회사 이름 같음&금액 다름-uni-world]
+Invoice K1-25027
+[회사 이름 같음&금액 다름-uni-world]
+Invoice K1-25093
+[회사 이름&금액 같음-uni-world]
+Invoice K1-25829
+[회사 이름&금액 같음-smartone]
+Invoice K1-26332
+[회사 이름&금액 같음-smartone]
+Invoice K1-26933
+[회사 이름&금액 같음-smartone]
+
+파일 2개 이상:
+K1-22701(엑셀 중복)
+K1-24297
+K1-24444(파일 빈 페이지)
+K1-22508(엑셀 중복)
+K1-23635(파일 빈 페이지)
+K1-26639(파일 빈 페이지)
+
+
+프롬프트 엔지니어링
+AI에게 하는 말을 잘 다듬는 기술.
+좋은 질문을 하면 더 똑똑한 답을 얻음.
+
+하네스 엔지니어링
+AI를 둘러싼 전체 환경을 만드는 기술.
+도구, 규칙, 확인 장치 등을 달아줘서 AI가 제대로 일하게 함.
+(에이전트 = 모델 + 하네스)
+
+루프 엔지니어링
+AI가 스스로 목표를 향해 계속 반복해서 일하게 만드는 기술.
+사람이 매번 시키지 않아도 알아서 돌고, 확인하고, 고침.
+
+
+supabase:
+https://blog.naver.com/enterwincom/224364321234  [정리]
+https://blog.naver.com/math-tong/224366417304
+
+html,css,js,git 좀 더 자세하게 실제 사용했던 예를 들어 다시 설명해줘
+
+
+1. myfresh book->smartone
+
+2. smartone 전체 데이터 invoice k1,k2 분류되어있는거 개수 파악
+k1: 94
+k2: 70
+
+3. ru같은 기타값있는거 파악
+ru: 6
+
+4.값에 전화번호랑 로고 제대로 들어갔는지 852 6621 7517
+로고 없음
+(전부 smartone)
+K1-21364
+K1-21059
+K1-21363(정보 값 없음)
+K1-24180
+K1-24181
+K1-24251
+K1-24375
+K1-26693
+	
+1. Kyuel Global Limited - ref 번호 다름
+2. PSS LINK Limited - 회사 없음
+3. OK Networks Limited - 회사 없음
+4. EDRA HK CO., LIMITED - 회사 없음
+5. PH HOLDING LIMITED - 회사 없음
+6. RUTTER PRIVATE EQUITY HONGKONG Limited - ref 번호 다름
+7. Pangaea Holdings Limited - 회사 없음
+8. KESI H.K Limited - 회사 없음
+9. PHILKOR HUMANS CO., LIMITED - ref 번호 다름
+10. VOS&C Limited - 회사 없음
+11. DIRECT STORE LIMITED - ref 번호 다름
+12. Tres-a HK Limited - 회사 없음
+13. Net. Bridge Limited - ref 번호 다름
+14. PJL HOLDINGS LIMITED - 회사 없음
+15. KOF Limited - 회사 없음
+
+
+마이너스
+1. O, -250,000 기타차감
+2. O, -18,175 할인
+3. O, -18,000 할인
+4. O, -15,000 할인
+5. O, -15,000 할인
+6. O, 
+7. O,
+8. O,
+9. O,
+10. 
+

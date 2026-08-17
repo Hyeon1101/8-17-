@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리얼 바닷가 파도 비디오 스튜디오 (바다.webm)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00e5ff;
+            --primary-glow: rgba(0, 229, 255, 0.45);
+            --bg-dark: #040711;
+            --panel-bg: rgba(8, 14, 26, 0.86);
+            --panel-border: rgba(255, 255, 255, 0.16);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-gold: #ffb703;
+            --accent-red: #ff4757;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+        }
+
+        /* Viewport for 100% Real Ocean Videos */
+        #viewport {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            background: #000;
+        }
+
+        video.real-sea-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.0s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        video.real-sea-video.active {
+            opacity: 1;
+        }
+
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.45);
+        }
+
+        /* Canvas for Video Recording Capture */
+        canvas#recordingCanvas {
+            display: none;
+        }
+
+        /* UI Overlay */
+        .ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px;
+        }
+
+        .interactive {
+            pointer-events: auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--panel-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--panel-border);
+            padding: 16px 28px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #00e5ff, #0072ff);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: white;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .logo-text h1 {
+            font-size: 19px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ffffff, #7dd3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.4px;
+        }
+
+        .logo-text p {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00e5ff 0%, #0072ff 100%);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 25px rgba(0, 229, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .recording-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 71, 87, 0.2);
+            border: 1px solid var(--accent-red);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #ff6b81;
+            font-weight: 700;
+            animation: pulse 1.5s infinite;
+        }
+
+        .recording-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-red);
+            border-radius: 50%;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Bottom Time Dock Bar */
+        .dock-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .dock {
+            background: var(--panel-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .time-pill-group {
+            display: flex;
+            background: rgba(0, 0, 0, 0.45);
+            padding: 6px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            gap: 8px;
+        }
+
+        .time-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 22px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+        }
+
+        .time-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .time-btn.morning.active {
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: white;
+            box-shadow: 0 4px 20px rgba(253, 160, 133, 0.6);
+        }
+
+        .time-btn.noon.active {
+            background: linear-gradient(135deg, #00e5ff, #0072ff);
+            color: white;
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        .time-btn.sunset.active {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            color: white;
+            box-shadow: 0 4px 20px rgba(255, 126, 95, 0.6);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: rgba(10, 18, 32, 0.95);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 760px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .video-preview-container {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            aspect-ratio: 16/9;
+        }
+
+        .video-preview-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Real Sea Viewport -->
+    <div id="viewport">
+        <!-- 🌅 Morning Sunrise Video -->
+        <video id="video-morning" class="real-sea-video active" loop muted playsinline crossOrigin="anonymous">
+            <source src="https://upload.wikimedia.org/wikipedia/commons/e/ee/Sunrise_Glow_Over_Surf_Beach_with_Pink_Horizon_and_Vibrant_Sand_Tones.webm" type="video/webm">
+        </video>
+
+        <!-- ☀️ Noon High Tide Drone Video -->
+        <video id="video-noon" class="real-sea-video" loop muted playsinline crossOrigin="anonymous">
+            <source src="https://upload.wikimedia.org/wikipedia/commons/c/c6/Aerial_view_of_sand_beach._Top_view_sea_waves._Drone_footage.webm" type="video/webm">
+        </video>
+
+        <!-- 🌇 Sunset Golden Hour Video -->
+        <video id="video-sunset" class="real-sea-video" loop muted playsinline crossOrigin="anonymous">
+            <source src="https://upload.wikimedia.org/wikipedia/commons/3/35/2022-08-06%2C_Pacific_Ocean_sunset_%28Ocean_Shores%2C_Washington%29%2C_01.webm" type="video/webm">
+        </video>
+
+        <div class="vignette"></div>
+    </div>
+
+    <!-- Hidden Canvas for Stream Capture Recording -->
+    <canvas id="recordingCanvas"></canvas>
+
+    <!-- Real Ocean Wave Binaural Audio -->
+    <audio id="oceanAudio" loop crossOrigin="anonymous" src="https://archive.org/download/Freesound-263995/Crashing_Ocean_Waves_3_hours_To_Relax_Sleep_or_Meditate-263995.mp3"></audio>
+
+    <div class="ui-overlay">
+        <!-- Header -->
+        <header class="interactive">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M2 12c2.5-3 5-3 7.5 0s5 3 7.5 0 5-3 7.5 0"></path>
+                        <path d="M2 17c2.5-3 5-3 7.5 0s5 3 7.5 0 5-3 7.5 0"></path>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1 id="themeTitleText">🌅 [아침 / 일출] 수평선 위로 해가 뜨는 실제 해변 일출 파도</h1>
+                    <p>100% 실제 촬영 오픈소스 바다 파도 영상 스튜디오</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button id="soundToggleBtn" class="btn" style="background: rgba(0, 229, 255, 0.25); border-color: #00e5ff;">
+                    <span id="soundIcon">🔊</span> 실제 파도 소리 On
+                </button>
+                
+                <div id="recordingStatus" class="recording-badge" style="display: none;">
+                    <div class="recording-dot"></div>
+                    <span id="recTimer">녹화 중 00:00</span>
+                </div>
+
+                <button id="quick10sBtn" class="btn btn-primary">
+                    ⚡ 바다.webm 영상 다운로드
+                </button>
+            </div>
+        </header>
+
+        <!-- Time Controls Dock -->
+        <div class="dock-container interactive">
+            <div class="dock">
+                <div class="time-pill-group">
+                    <button class="time-btn morning active" data-target="morning">
+                        🌅 아침 (해뜨는 일출)
+                    </button>
+                    <button class="time-btn noon" data-target="noon">
+                        🌊 점심 (에메랄드 밀물 4K)
+                    </button>
+                    <button class="time-btn sunset" data-target="sunset">
+                        🌇 저녁 (해지는 일몰)
+                    </button>
+                </div>
+
+                <button id="fullscreenBtn" class="btn" style="padding: 12px 18px; border-radius: 14px;">
+                    ⛶ 전체화면 감상
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Output Modal -->
+    <div id="videoModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">🎬 완성된 '바다.webm' 영상 파일</div>
+                <button id="closeModalBtn" class="modal-close">&times;</button>
+            </div>
+            <div class="video-preview-container">
+                <video id="recordedVideo" controls autoplay loop></video>
+            </div>
+            <div class="modal-footer">
+                <button id="closeModalBtn2" class="btn">닫기</button>
+                <a id="downloadVideoBtn" class="btn btn-primary" download="바다.webm">
+                    💾 바다.webm 파일 다운로드
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const videos = {
+            morning: document.getElementById('video-morning'),
+            noon: document.getElementById('video-noon'),
+            sunset: document.getElementById('video-sunset')
+        };
+
+        const titles = {
+            morning: "🌅 [아침 / 일출] 수평선 너머로 핑크빛 해가 떠오르는 실제 해돋이 파도",
+            noon: "🌊 [점심 / 밀물] 맑은 에메랄드 해변으로 밀려드는 초고화질 4K 드론 밀물 파도",
+            sunset: "🌇 [저녁 / 일몰] 태평양 수평선 너머로 붉은 해가 넘어가는 실제 일몰 파도"
+        };
+
+        let currentActiveKey = 'morning';
+
+        // Play default morning video
+        videos.morning.play().catch(() => {});
+
+        // Real Ocean Wave Binaural Audio
+        const oceanAudio = document.getElementById('oceanAudio');
+        const soundToggleBtn = document.getElementById('soundToggleBtn');
+        const soundIcon = document.getElementById('soundIcon');
+        let isSoundOn = true;
+
+        function tryPlayAudio() {
+            if (isSoundOn) {
+                oceanAudio.volume = 0.6;
+                oceanAudio.play().catch(() => {});
+            }
+        }
+        document.addEventListener('click', tryPlayAudio, { once: true });
+        tryPlayAudio();
+
+        soundToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isSoundOn = !isSoundOn;
+            if (isSoundOn) {
+                oceanAudio.volume = 0.6;
+                oceanAudio.play().catch(() => {});
+                soundToggleBtn.style.background = "rgba(0, 229, 255, 0.25)";
+                soundToggleBtn.style.borderColor = "#00e5ff";
+                soundIcon.textContent = "🔊";
+            } else {
+                oceanAudio.pause();
+                soundToggleBtn.style.background = "rgba(255, 255, 255, 0.09)";
+                soundToggleBtn.style.borderColor = "var(--panel-border)";
+                soundIcon.textContent = "🔇";
+            }
+        });
+
+        // Time Switcher
+        function switchVideo(targetKey) {
+            if (targetKey === currentActiveKey) return;
+
+            videos[currentActiveKey].classList.remove('active');
+            videos[currentActiveKey].pause();
+
+            currentActiveKey = targetKey;
+            const newVideo = videos[currentActiveKey];
+            newVideo.classList.add('active');
+            newVideo.currentTime = 0;
+            newVideo.play().catch(() => {});
+
+            document.getElementById('themeTitleText').textContent = titles[currentActiveKey];
+
+            document.querySelectorAll('.time-btn').forEach(b => {
+                b.classList.remove('active');
+                if (b.getAttribute('data-target') === currentActiveKey) {
+                    b.classList.add('active');
+                }
+            });
+        }
+
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetKey = btn.getAttribute('data-target');
+                switchVideo(targetKey);
+            });
+        });
+
+        // Fullscreen Toggle
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // --- Video Frame Capture & Export as '바다.webm' ---
+        const recCanvas = document.getElementById('recordingCanvas');
+        const recCtx = recCanvas.getContext('2d');
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let isRecording = false;
+        let recInterval = null;
+        let recSeconds = 0;
+
+        const quick10sBtn = document.getElementById('quick10sBtn');
+        const recordingStatus = document.getElementById('recordingStatus');
+        const recTimer = document.getElementById('recTimer');
+        const videoModal = document.getElementById('videoModal');
+        const recordedVideo = document.getElementById('recordedVideo');
+        const downloadVideoBtn = document.getElementById('downloadVideoBtn');
+
+        function drawVideoFrame() {
+            const activeVideo = videos[currentActiveKey];
+            if (activeVideo && activeVideo.readyState >= 2) {
+                recCanvas.width = activeVideo.videoWidth || window.innerWidth;
+                recCanvas.height = activeVideo.videoHeight || window.innerHeight;
+                recCtx.drawImage(activeVideo, 0, 0, recCanvas.width, recCanvas.height);
+            }
+            if (isRecording) {
+                requestAnimationFrame(drawVideoFrame);
+            }
+        }
+
+        function startRecording(durationSec = 10) {
+            if (isRecording) return;
+            drawVideoFrame();
+
+            const stream = recCanvas.captureStream(60);
+            recordedChunks = [];
+
+            let options = { mimeType: 'video/webm;codecs=vp9' };
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                options = { mimeType: 'video/webm' };
+            }
+
+            mediaRecorder = new MediaRecorder(stream, options);
+
+            mediaRecorder.ondataavailable = (e) => {
+                if (e.data && e.data.size > 0) {
+                    recordedChunks.push(e.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const videoURL = URL.createObjectURL(blob);
+                recordedVideo.src = videoURL;
+                downloadVideoBtn.href = videoURL;
+                downloadVideoBtn.download = "바다.webm";
+                videoModal.classList.add('active');
+
+                // Reset UI
+                isRecording = false;
+                recordingStatus.style.display = 'none';
+                clearInterval(recInterval);
+            };
+
+            mediaRecorder.start();
+            isRecording = true;
+            recSeconds = 0;
+            recordingStatus.style.display = 'flex';
+
+            recInterval = setInterval(() => {
+                recSeconds++;
+                const mins = String(Math.floor(recSeconds / 60)).padStart(2, '0');
+                const secs = String(recSeconds % 60).padStart(2, '0');
+                recTimer.textContent = `녹화 중 ${mins}:${secs}`;
+
+                if (recSeconds >= durationSec) {
+                    mediaRecorder.stop();
+                }
+            }, 1000);
+        }
+
+        quick10sBtn.addEventListener('click', () => {
+            startRecording(10);
+        });
+
+        // Modal Close Controls
+        document.getElementById('closeModalBtn').addEventListener('click', () => videoModal.classList.remove('active'));
+        document.getElementById('closeModalBtn2').addEventListener('click', () => videoModal.classList.remove('active'));
+    </script>
+</body>
+</html>
